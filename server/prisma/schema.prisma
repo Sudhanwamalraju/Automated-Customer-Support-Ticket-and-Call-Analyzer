@@ -1,0 +1,125 @@
+// ============================================================
+// Prisma Schema — Customer Support Ticket & Call Analyzer
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────
+// ENUMS
+// ─────────────────────────────────────────────
+
+enum Source {
+  TICKET
+  CALL
+}
+
+enum Status {
+  NEW
+  ANALYZED
+  IN_PROGRESS
+  RESOLVED
+}
+
+enum Category {
+  BILLING
+  TECHNICAL
+  ACCOUNT
+  GENERAL
+  OTHER
+}
+
+enum Urgency {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum Sentiment {
+  ANGRY
+  FRUSTRATED
+  NEUTRAL
+  HAPPY
+}
+
+// ─────────────────────────────────────────────
+// MODELS
+// ─────────────────────────────────────────────
+
+/// A customer support interaction — either a written ticket or a call transcript.
+model Ticket {
+  id             String    @id @default(cuid())
+  ticketNumber   String    @unique
+
+  // Customer info
+  customerName   String
+  customerEmail  String
+
+  // Content
+  subject        String
+  content        String    @db.Text
+
+  // Classification
+  source         Source    @default(TICKET)
+  status         Status    @default(NEW)
+  category       Category  @default(GENERAL)
+  urgency        Urgency   @default(MEDIUM)
+
+  // AI Analysis output (nullable until analyzed)
+  sentiment      Sentiment?
+  summary        String?   @db.Text
+  draftResponse  String?   @db.Text
+  aiConfidence   Float?    // 0.0 – 1.0 confidence score
+
+  // Tags extracted by AI (stored as plain array)
+  tags           String[]
+
+  // Relations
+  callTranscript CallTranscript?
+
+  // Timestamps
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  // ── Indexes ──────────────────────────────────
+  @@index([status])
+  @@index([urgency])
+  @@index([category])
+  @@index([sentiment])
+  @@index([createdAt])
+  @@index([customerEmail])
+  @@index([source])
+  @@index([status, urgency])       // compound — for dashboard queries
+  @@index([category, sentiment])   // compound — for analytics queries
+}
+
+/// Raw call transcript linked 1-to-1 with a Ticket.
+model CallTranscript {
+  id           String   @id @default(cuid())
+  ticketId     String   @unique
+
+  // The raw transcript text (speaker-labelled)
+  rawText      String   @db.Text
+
+  // Derived fields (populated by AI or manually)
+  duration     Int?     // call duration in seconds
+  speakerCount Int?     // number of distinct speakers detected
+  agentName    String?
+  keywords     String[] // key phrases extracted from transcript
+
+  // Timestamps
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relation back to Ticket
+  ticket       Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@index([ticketId])
+}

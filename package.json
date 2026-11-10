@@ -1,0 +1,16 @@
+{
+  "name": "customer-support-analyzer",
+  "version": "1.0.0",
+  "description": "Automated Customer Support Ticket & Call Analyzer",
+  "private": true,
+  "scripts": {
+    "dev": "node node_modules/concurrently/dist/bin/concurrently.js \"cd server && node node_modules/tsx/dist/cli.mjs src/server.ts\" \"cd client && node node_modules/vite/bin/vite.js --port 5173\"",
+    "dev:server": "cd server && node node_modules/tsx/dist/cli.mjs watch src/server.ts",
+    "dev:client": "cd client && node node_modules/vite/bin/vite.js --port 5173",
+    "install:all": "npm install && cd server && npm install && cd ../client && npm install",
+    "build": "cd client && node node_modules/vite/bin/vite.js build && cd ../server && node node_modules/typescript/bin/tsc"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  }
+}

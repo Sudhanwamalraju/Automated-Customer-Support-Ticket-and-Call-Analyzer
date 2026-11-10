@@ -1,0 +1,113 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #F7F7F5;
+  --color-forest: #1A3C2B;
+  --color-grid: #3A3A38;
+  --color-coral: #FF8C69;
+  --color-mint: #9EFFBF;
+  --color-gold: #F4D35E;
+
+  --color-background: #F7F7F5;
+  --color-foreground: #1A3C2B;
+  --color-card: #FFFFFF;
+  --color-card-foreground: #1A3C2B;
+  --color-popover: #FFFFFF;
+  --color-popover-foreground: #1A3C2B;
+  --color-primary: #1A3C2B;
+  --color-primary-foreground: #FFFFFF;
+  --color-secondary: #EFEFEA;
+  --color-secondary-foreground: #1A3C2B;
+  --color-muted: #EFEFEA;
+  --color-muted-foreground: #5A5A58;
+  --color-accent: #E8E8E2;
+  --color-accent-foreground: #1A3C2B;
+  --color-destructive: #D94838;
+  --color-destructive-foreground: #FFFFFF;
+  --color-border: rgba(58, 58, 56, 0.2);
+  --color-input: #FFFFFF;
+  --color-ring: #1A3C2B;
+
+  --radius-xs: 0px;
+  --radius-sm: 2px;
+  --radius-md: 2px;
+  --radius-lg: 2px;
+  --radius-xl: 2px;
+
+  --font-sans: "Space Grotesk", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-header: "Space Grotesk", system-ui, sans-serif;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    border-color: rgba(58, 58, 56, 0.2);
+    box-shadow: none !important;
+  }
+
+  body {
+    background-color: #F7F7F5;
+    color: #1A3C2B;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-header);
+    letter-spacing: -0.03em;
+    color: #1A3C2B;
+  }
+
+  code, pre, kbd, samp {
+    font-family: var(--font-mono);
+  }
+}
+
+/* ── Mosaic Background Pattern ───────────────────────────────────────────── */
+.bg-mosaic {
+  background-color: #F7F7F5;
+  background-image: url("data:image/svg+xml,%3Csvg width='320' height='320' viewBox='0 0 320 320' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23F7F7F5' stroke='%233A3A38' stroke-width='0.5' stroke-opacity='0.22'%3E%3Crect x='0' y='0' width='160' height='120' /%3E%3Crect x='160' y='0' width='160' height='60' /%3E%3Crect x='160' y='60' width='80' height='120' /%3E%3Crect x='240' y='60' width='80' height='60' /%3E%3Crect x='240' y='120' width='80' height='140' /%3E%3Crect x='0' y='120' width='100' height='80' /%3E%3Crect x='100' y='120' width='60' height='140' /%3E%3Crect x='160' y='180' width='80' height='80' /%3E%3Crect x='0' y='200' width='100' height='120' /%3E%3Crect x='100' y='260' width='140' height='60' /%3E%3Crect x='240' y='260' width='80' height='60' /%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+/* ── Technical Animations ────────────────────────────────────────────────── */
+@keyframes orbit-cw {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes orbit-ccw {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+.animate-orbit {
+  animation: orbit-cw 20s linear infinite;
+}
+
+.animate-orbit-reverse {
+  animation: orbit-ccw 20s linear infinite;
+}
+
+/* ── Image Luminosity Blend ──────────────────────────────────────────────── */
+.tech-wireframe-img {
+  mix-blend-mode: luminosity;
+  opacity: 0.9;
+  transition: all 0.25s ease-out;
+}
+.tech-wireframe-img:hover {
+  mix-blend-mode: normal;
+  opacity: 1;
+}
